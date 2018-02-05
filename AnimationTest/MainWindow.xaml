@@ -1,0 +1,40 @@
+﻿<Window x:Class="AnimationTest.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AnimationTest"
+        mc:Ignorable="d"
+        Title="Animation Test" Height="350" Width="525">
+    <Window.Resources>
+        <local:MainViewModel x:Key="MainViewModel" />
+    </Window.Resources>
+    
+    <Grid Name="gMain" DataContext="{StaticResource MainViewModel}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20px" />
+            <RowDefinition Height="40px" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Menu x:Name="mMain" DataContext="{StaticResource MainViewModel}">
+            <MenuItem x:Name="mMotion" Header="Motion"></MenuItem>
+            <MenuItem x:Name="mGroup" Header="Group"></MenuItem>
+            <MenuItem x:Name="mGravity" Header="Gravity"></MenuItem>
+            <MenuItem x:Name="mRandom" Header="Random"></MenuItem>
+            <CheckBox Content="Draw Tracks" IsChecked="{Binding DrawTracks}" />
+            <!--CheckBox Content="Simplify Tracks" IsChecked="{Binding SimplifyTracks}" /-->
+        </Menu>
+        <StackPanel Orientation="Horizontal" Grid.Row="1">
+            <Button Name="btnRun" Content="Run" Command="{Binding RunCommand}" 
+                    CommandParameter="{StaticResource MainViewModel}" />
+            <Button Name="btnStop" Content="Stop" Command="{Binding StopCommand}"
+                    CommandParameter="{StaticResource MainViewModel}" />
+        </StackPanel>
+        <local:CanvasFrameworkElement x:Name="CanvasElement" Grid.Row="2" Width="1200" Height="800" />
+        <Image x:Name="iCanvas" Grid.Row="2" 
+               MouseWheel="iCanvas_MouseWheel"
+               MouseDown="iCanvas_MouseDown"
+               MouseMove="iCanvas_MouseUp"
+               Width="1200" Height="800" />
+    </Grid>
+</Window>
