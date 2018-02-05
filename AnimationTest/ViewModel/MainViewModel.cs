@@ -275,6 +275,17 @@ namespace AnimationTest
 		}
 
 
+		public static string DeltaPropertyName = "Delta";
+		public double Delta
+		{
+			get { return this.FDelta; }
+			set
+			{
+				this.FDelta = value;
+				NotifyPropertyChanged(DeltaPropertyName);
+			}
+		}
+
 		public static string ItemsNamePropertyName = "Items";
 		private string FItemsName;
 		public string ItemsName

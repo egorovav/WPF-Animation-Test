@@ -208,7 +208,7 @@ namespace AnimationTest
 			this.FDragStart = e.GetPosition(this.iCanvas);
 		}
 
-		private void iCanvas_MouseUp(object sender, MouseEventArgs e)
+		private void iCanvas_MouseMove(object sender, MouseEventArgs e)
 		{
 			if (e.LeftButton == MouseButtonState.Pressed && this.FDragStart.X != 0)
 			{
@@ -222,6 +222,25 @@ namespace AnimationTest
 			}
 			else
 				this.FDragStart = new Point(0, 0);
+		}
+
+		private void btnAccelerate_Click(object sender, RoutedEventArgs e)
+		{
+			this.MainViewModel.Delta *= 1.1;
+		}
+
+		private void btnDeaccelerate_Click(object sender, RoutedEventArgs e)
+		{
+			this.MainViewModel.Delta /= 1.1;
+		}
+
+		private void btnClear_Click(object sender, RoutedEventArgs e)
+		{
+			foreach(var _item in this.MainViewModel.Items)
+			{
+				_item.ClearTrack();
+				this.ClearTracks();
+			}
 		}
 	}
 }

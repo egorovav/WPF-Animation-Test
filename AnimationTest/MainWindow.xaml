@@ -25,16 +25,19 @@
             <!--CheckBox Content="Simplify Tracks" IsChecked="{Binding SimplifyTracks}" /-->
         </Menu>
         <StackPanel Orientation="Horizontal" Grid.Row="1">
-            <Button Name="btnRun" Content="Run" Command="{Binding RunCommand}" 
+            <Button x:Name="btnRun" Content="Run" Command="{Binding RunCommand}" 
                     CommandParameter="{StaticResource MainViewModel}" />
             <Button Name="btnStop" Content="Stop" Command="{Binding StopCommand}"
                     CommandParameter="{StaticResource MainViewModel}" />
+			<Button x:Name="btnAccelerate" Content="&gt;&gt;" Click="btnAccelerate_Click"></Button>
+			<Button x:Name="btnDeaccelerate" Content="&lt;&lt;" Click="btnDeaccelerate_Click"></Button>
+			<Button x:Name="btnClear" Content="Clear" Click="btnClear_Click"></Button>
         </StackPanel>
         <local:CanvasFrameworkElement x:Name="CanvasElement" Grid.Row="2" Width="1200" Height="800" />
         <Image x:Name="iCanvas" Grid.Row="2" 
                MouseWheel="iCanvas_MouseWheel"
                MouseDown="iCanvas_MouseDown"
-               MouseMove="iCanvas_MouseUp"
+               MouseMove="iCanvas_MouseMove"
                Width="1200" Height="800" />
     </Grid>
 </Window>
