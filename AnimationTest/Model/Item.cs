@@ -38,6 +38,11 @@ namespace AnimationTest
 			{
 				return this.FPosition;
 			}
+
+            set
+            {
+                this.FPosition = value;
+            }
 		}
 
 		public Color Color

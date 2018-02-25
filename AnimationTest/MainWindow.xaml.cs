@@ -203,6 +203,8 @@ namespace AnimationTest
 		}
 
 		Point FDragStart;
+        Item FCapturedItem;
+
 		private void iCanvas_MouseDown(object sender, MouseEventArgs e)
 		{
 			this.FDragStart = e.GetPosition(this.iCanvas);
@@ -210,18 +212,43 @@ namespace AnimationTest
 
 		private void iCanvas_MouseMove(object sender, MouseEventArgs e)
 		{
-			if (e.LeftButton == MouseButtonState.Pressed && this.FDragStart.X != 0)
-			{
-				var _dragEnd = e.GetPosition(this.iCanvas);
-				var _shift = _dragEnd - this.FDragStart;
-				this.FDragStart = _dragEnd;
+            if (this.MainViewModel.Items != null && e.LeftButton == MouseButtonState.Pressed)
+            {
+                var _dragEnd = e.GetPosition(this.iCanvas);
+                foreach (var _item in this.MainViewModel.Items)
+                {
+                    var _delta = this.FTransform.Transform(_item.Position) - _dragEnd;
+                    if (_delta.Length < _item.Radius)
+                    {
+                        this.FCapturedItem = _item;
+                    }
+                }
 
-				this.FTransform.Children.Add(new TranslateTransform(_shift.X, _shift.Y));
-				this.ClearTracks();
-				this.DrawTracks();
-			}
-			else
-				this.FDragStart = new Point(0, 0);
+                if (this.FCapturedItem != null)
+                {
+                    this.FCapturedItem.Position = this.FTransform.Inverse.Transform(_dragEnd);
+                    this.CanvasElement.DrawItems();
+                }
+
+                if (this.FDragStart.X != 0)
+                {
+                    if (this.FCapturedItem == null)
+                    {
+                        var _shift = _dragEnd - this.FDragStart;
+                        this.FDragStart = _dragEnd;
+
+                        this.FTransform.Children.Add(new TranslateTransform(_shift.X, _shift.Y));
+                        this.ClearTracks();
+                        this.DrawTracks();
+                    }
+                }
+                else
+                    this.FDragStart = new Point(0, 0);
+            }
+            else
+            {
+                this.FCapturedItem = null;
+            }
 		}
 
 		private void btnAccelerate_Click(object sender, RoutedEventArgs e)

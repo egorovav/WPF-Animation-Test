@@ -183,14 +183,20 @@ namespace AnimationTest
 			_planets.Add(_neptun);
 
 			double _p = 0;
+			double _mr = 0;
+			double _ms = this.FSolarMass;
 			for(int i = 0; i < _planets.Count; i++)
 			{
 				var _m = (GravityMotion)_planets[i].Motion;
 				_p += _planets[i].Mass * _m.StartVelocity.X;
+				_mr += _planets[i].Mass * _planets[i].Position.Y;
+				_ms += _planets[i].Mass;
 			}
 
-			var _motionSolar = new GravityMotion(new Vector(-_p / 332940, 0), _planets);
-			var _sol = new Item(Colors.Orange, _centerSolar, _motionSolar, 332940, 109 * this.FEarthRadiusRel);
+			var _sy = (_ms * _centerSolar.Y - _mr) / this.FSolarMass;
+			var _motionSolar = new GravityMotion(new Vector(-_p / this.FSolarMass, 0), _planets);
+			var _sol = new Item(
+				Colors.Orange, new Point(_centerSolar.X, _sy), _motionSolar, this.FSolarMass, 109 * this.FEarthRadiusRel);
 			_planets.Add(_sol);
 
 			this.FItemsLists.Add("Solar System", _planets);
@@ -304,7 +310,6 @@ namespace AnimationTest
 			{
 				if (this.FItemsName == null)
 				{
-					this.ErrorString = "You should select a motion.";
 					return null;
 				}
 
