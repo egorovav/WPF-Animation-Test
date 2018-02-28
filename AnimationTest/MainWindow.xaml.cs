@@ -207,26 +207,39 @@ namespace AnimationTest
 
 		private void iCanvas_MouseDown(object sender, MouseEventArgs e)
 		{
-			this.FDragStart = e.GetPosition(this.iCanvas);
-		}
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                this.FDragStart = e.GetPosition(this.iCanvas);
+
+                if (this.MainViewModel.Items != null)
+                {
+                    foreach (var _item in this.MainViewModel.Items)
+                    {
+                        var _delta = this.FTransform.Transform(_item.Position) - this.FDragStart;
+                        if (_delta.Length < _item.Radius)
+                        {
+                            this.FCapturedItem = _item;
+                        }
+                    }
+                }
+            }
+        }
 
 		private void iCanvas_MouseMove(object sender, MouseEventArgs e)
 		{
             if (this.MainViewModel.Items != null && e.LeftButton == MouseButtonState.Pressed)
             {
                 var _dragEnd = e.GetPosition(this.iCanvas);
-                foreach (var _item in this.MainViewModel.Items)
-                {
-                    var _delta = this.FTransform.Transform(_item.Position) - _dragEnd;
-                    if (_delta.Length < _item.Radius)
-                    {
-                        this.FCapturedItem = _item;
-                    }
-                }
+
+                var _transformedShift = 
+                    this.FTransform.Inverse.Transform(_dragEnd) - this.FTransform.Inverse.Transform(this.FDragStart);
+                var _shift = _dragEnd - this.FDragStart;
+                this.FDragStart = _dragEnd;
 
                 if (this.FCapturedItem != null)
                 {
-                    this.FCapturedItem.Position = this.FTransform.Inverse.Transform(_dragEnd);
+                    this.FCapturedItem.Position += _transformedShift;
+                        
                     this.CanvasElement.DrawItems();
                 }
 
@@ -234,24 +247,33 @@ namespace AnimationTest
                 {
                     if (this.FCapturedItem == null)
                     {
-                        var _shift = _dragEnd - this.FDragStart;
-                        this.FDragStart = _dragEnd;
-
                         this.FTransform.Children.Add(new TranslateTransform(_shift.X, _shift.Y));
                         this.ClearTracks();
                         this.DrawTracks();
                     }
                 }
-                else
-                    this.FDragStart = new Point(0, 0);
+                //else
+                //    this.FDragStart = new Point(0, 0);
             }
-            else
-            {
-                this.FCapturedItem = null;
-            }
-		}
+            //else
+            //{
+            //    this.FCapturedItem = null;
+            //}
+        }
 
-		private void btnAccelerate_Click(object sender, RoutedEventArgs e)
+        private void iCanvas_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            this.FCapturedItem = null;
+            this.FDragStart = new Point(0, 0);
+        }
+
+        private void iCanvas_MouseLeave(object sender, MouseEventArgs e)
+        {
+            this.FCapturedItem = null;
+            this.FDragStart = new Point(0, 0);
+        }
+
+        private void btnAccelerate_Click(object sender, RoutedEventArgs e)
 		{
 			this.MainViewModel.Delta *= 1.1;
 		}
@@ -269,5 +291,5 @@ namespace AnimationTest
 				this.ClearTracks();
 			}
 		}
-	}
+    }
 }

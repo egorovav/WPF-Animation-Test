@@ -38,6 +38,8 @@
                MouseWheel="iCanvas_MouseWheel"
                MouseDown="iCanvas_MouseDown"
                MouseMove="iCanvas_MouseMove"
+               MouseUp="iCanvas_MouseUp"
+               MouseLeave="iCanvas_MouseLeave"
                Width="1200" Height="800" />
     </Grid>
 </Window>
