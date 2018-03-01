@@ -117,11 +117,30 @@ namespace AnimationTest
 			var _sattelite5 = new Item(Colors.Gray, new Point(600, 20), _motionSattelite5, 0, 3);
 			_list5.Add(_sattelite5);
 
-			this.FItemsLists.Add("Group:Accelerated", _list1);
+            var _list6 = new List<Item>();
+
+            var _motion6_1 = new GravityMotion(new Vector(1, -1), _list6);
+            var _item6_1 = new Item(Colors.Blue, new Point(50, 50), _motion6_1, 1700);
+            _list6.Add(_item6_1);
+
+            var _motion6_2 = new GravityMotion(new Vector(1, 1), _list6);
+            var _item6_2 = new Item(Colors.Gray, new Point(350, 50), _motion6_2, 1700);
+            _list6.Add(_item6_2);
+
+            var _motion6_3 = new GravityMotion(new Vector(-1, 1), _list6);
+            var _item6_3 = new Item(Colors.Green, new Point(350, 350), _motion6_3, 1700);
+            _list6.Add(_item6_3);
+
+            var _motion6_4 = new GravityMotion(new Vector(-1, -1), _list6);
+            var _item6_4 = new Item(Colors.Violet, new Point(50, 350), _motion6_4, 1700);
+            _list6.Add(_item6_4);
+
+            this.FItemsLists.Add("Group:Accelerated", _list1);
 			this.FItemsLists.Add("Gravity:Three objects", _list2);
 			this.FItemsLists.Add("Gravity:Earth sattelite", _list3);
 			this.FItemsLists.Add("Gravity:To Moon", _list4);
 			this.FItemsLists.Add("Gravity:Moon sattelite", _list5);
+            this.FItemsLists.Add("Gravity:Four objects", _list6);
 
 			var _centerSolar = new Point(600, 400);
 			var _earthOrbitRadius = this.FEarthRadiusRel * 2 * this.FEarthOrbit / this.FEarthDiam;
