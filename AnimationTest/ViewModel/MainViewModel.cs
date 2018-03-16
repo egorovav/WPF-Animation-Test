@@ -76,7 +76,14 @@ namespace AnimationTest
 			var _sattelite1 = new Item(Colors.Gray, new Point(600, 40), _motionSattelite1);
 			_list3.Add(_sattelite1);
 
-			var _list4 = new List<Item>();
+            for (int i = 0; i < 10; i++)
+            {
+                var _motionS = new GravityMotion(new Vector(2 + i * 0.5, 0), _list3);
+                var _s = new Item(Colors.Gray, new Point(600, 40), _motionS);
+                _list3.Add(_s);
+            }
+
+            var _list4 = new List<Item>();
 			var _list5 = new List<Item>();
 
 			var _motionEarth = new GravityMotion(new Vector(-0.048, 0), _list4);
