@@ -101,7 +101,9 @@ namespace AnimationTest
 				if (this.MainViewModel.Items == null)
 					return;
 
-				this.CanvasElement.Clear();
+                this.FTransform.Children.Clear();
+
+                this.CanvasElement.Clear();
 				foreach (var _item in this.MainViewModel.Items)
 				{
 					_item.Reset();
