@@ -14,15 +14,16 @@ namespace AnimationTest
 		private CancellationTokenSource FRunCancellationTokenSource;
 		private int FWaitTime = 1;
 
-		private double FEarthRadiusRel = 0.004;
+        private double FEarthRadiusRel = 0.004;
 		private double FEarthOrbit = 149598261;
 		private double FEarthDiam = 12756;
 		private double FDayDurationRel = 100;
 		private double FPeriod = 365.256;
-		private double FSolarMass = 332940;
 		private double FDelta = 0.1;
+        private const double FEarthMass = 0.0000001;
+        private double FSolarMass = FEarthMass * 332940;
 
-		private Dictionary<string, List<Item>> FItemsLists = new Dictionary<string, List<Item>>();
+        private Dictionary<string, List<Item>> FItemsLists = new Dictionary<string, List<Item>>();
 
 		public static object CanvasLocker = new object();
 
@@ -102,9 +103,9 @@ namespace AnimationTest
 			var _Moon5 = new Item(Colors.SandyBrown, new Point(600, 40), _motionMoon5, 70);
 			_list5.Add(_Moon5);
 
-			var _motionSattelite4 = new GravityMotion(new Vector(12.60685198, -7.1), _list4);
+			var _motionSattelite4 = new GravityMotion(new Vector(12.60685198, -7.1), _list4);        
 			var _sattelite4 = new Item(Colors.Gray, new Point(600, 350), _motionSattelite4, 0, 3);
-			_list4.Add(_sattelite4);
+            _list4.Add(_sattelite4);
 
 			//for (int i = 98; i < 99; i++)
 			//{
@@ -127,27 +128,27 @@ namespace AnimationTest
             var _list6 = new List<Item>();
 
             var _motion6_1 = new GravityMotion(new Vector(1, -1), _list6);
-            var _item6_1 = new Item(Colors.Blue, new Point(50, 50), _motion6_1, 1700);
+            var _item6_1 = new Item(Colors.Blue, new Point(10, 10), _motion6_1, 1700);
             _list6.Add(_item6_1);
 
             var _motion6_2 = new GravityMotion(new Vector(1, 1), _list6);
-            var _item6_2 = new Item(Colors.Gray, new Point(350, 50), _motion6_2, 1700);
+            var _item6_2 = new Item(Colors.Gray, new Point(450, 150), _motion6_2, 1700);
             _list6.Add(_item6_2);
 
             var _motion6_3 = new GravityMotion(new Vector(-1, 1), _list6);
-            var _item6_3 = new Item(Colors.Green, new Point(350, 350), _motion6_3, 1700);
+            var _item6_3 = new Item(Colors.Green, new Point(590, 590), _motion6_3, 1700);
             _list6.Add(_item6_3);
 
             var _motion6_4 = new GravityMotion(new Vector(-1, -1), _list6);
-            var _item6_4 = new Item(Colors.Violet, new Point(50, 350), _motion6_4, 1700);
+            var _item6_4 = new Item(Colors.Violet, new Point(150, 450), _motion6_4, 1700);
             _list6.Add(_item6_4);
 
-            this.FItemsLists.Add("Group:Accelerated", _list1);
-			this.FItemsLists.Add("Gravity:Three objects", _list2);
-			this.FItemsLists.Add("Gravity:Earth sattelite", _list3);
-			this.FItemsLists.Add("Gravity:To Moon", _list4);
-			this.FItemsLists.Add("Gravity:Moon sattelite", _list5);
-            this.FItemsLists.Add("Gravity:Four objects", _list6);
+            this.FItemsLists.Add(ItemsNames.GroupAccelerated, _list1);
+			this.FItemsLists.Add(ItemsNames.GravityThreeObjects, _list2);
+			this.FItemsLists.Add(ItemsNames.GravityEarthSattelite, _list3);
+			this.FItemsLists.Add(ItemsNames.GravityToMoon, _list4);
+			this.FItemsLists.Add(ItemsNames.GravityMoon, _list5);
+            this.FItemsLists.Add(ItemsNames.GravityFourObjects, _list6);
 
 			var _centerSolar = new Point(600, 400);
 			var _earthOrbitRadius = this.FEarthRadiusRel * 2 * this.FEarthOrbit / this.FEarthDiam;
@@ -156,56 +157,64 @@ namespace AnimationTest
 			double _earthEx = 0.017;
 			var _earthVelocity = Math.Sqrt(this.FSolarMass * (1 + _earthEx) / _earthOrbitRadius * (1 - _earthEx));
 			var _motionEarth1 = new GravityMotion(new Vector(_earthVelocity, 0), _planets);
-			var _earth = new Item(Colors.Blue, new Point(_centerSolar.X, _centerSolar.Y - _earthOrbitRadius), _motionEarth1, 1, this.FEarthRadiusRel);
+            var _earth = new Item(Colors.Blue, new Point(_centerSolar.X, _centerSolar.Y - _earthOrbitRadius), _motionEarth1,
+                FEarthMass * 1, 1); // this.FEarthRadiusRel);
 			_planets.Add(_earth);
 
 			double _mercEx = 0.2056;
 			var _mercOrbitRadius = _earthOrbitRadius * 0.3075;
 			var _mercVelocity = Math.Sqrt(this.FSolarMass * (1 + _mercEx) / _mercOrbitRadius * (1 - _mercEx));
 			var _motionMerc = new GravityMotion(new Vector(_mercVelocity, 0), _planets);
-			var _merc = new Item(Colors.Brown, new Point(_centerSolar.X, _centerSolar.Y - _mercOrbitRadius), _motionMerc, 0.055, this.FEarthRadiusRel * 0.38);
+            var _merc = new Item(Colors.Brown, new Point(_centerSolar.X, _centerSolar.Y - _mercOrbitRadius), _motionMerc,
+                FEarthMass * 0.055, 1);// this.FEarthRadiusRel * 0.38);
 			_planets.Add(_merc);
 
 			double _venusEx = 0.0068;
 			var _venusOrbitRadius = _earthOrbitRadius * 0.7233;
 			var _venusVelocity = Math.Sqrt(this.FSolarMass * (1 + _venusEx) / _venusOrbitRadius * (1 - _venusEx));
 			var _motionVenus = new GravityMotion(new Vector(_venusVelocity, 0), _planets);
-			var _venus = new Item(Colors.Aqua, new Point(_centerSolar.X, _centerSolar.Y - _venusOrbitRadius), _motionVenus, 0.815, this.FEarthRadiusRel * 0.95);
+            var _venus = new Item(Colors.Aqua, new Point(_centerSolar.X, _centerSolar.Y - _venusOrbitRadius), _motionVenus,
+                FEarthMass * 0.815, 1); // this.FEarthRadiusRel * 0.95);
 			_planets.Add(_venus);
 
 			var _marsEx = 0.0934;
 			var _marsOrbitRadius = _earthOrbitRadius * 1.381;
 			var _marsVelocity = Math.Sqrt(this.FSolarMass * (1 + _marsEx) / _marsOrbitRadius * (1 - _marsEx));
 			var _motionMars = new GravityMotion(new Vector(_marsVelocity, 0), _planets);
-			var _mars = new Item(Colors.Red, new Point(_centerSolar.X, _centerSolar.Y - _marsOrbitRadius), _motionMars, 0.107, this.FEarthRadiusRel * 0.532);
+            var _mars = new Item(Colors.Red, new Point(_centerSolar.X, _centerSolar.Y - _marsOrbitRadius), _motionMars,
+                FEarthMass * 0.107, 1); // this.FEarthRadiusRel * 0.532);
 			_planets.Add(_mars);
 
 			var _jupiEx = 0.0488;
 			var _jupiOrbitRadius = _earthOrbitRadius * 4.9504;
 			var _jupiVelocity = Math.Sqrt(this.FSolarMass * (1 + _jupiEx) / _jupiOrbitRadius * (1 - _jupiEx));
 			var _motionJupi = new GravityMotion(new Vector(-_jupiVelocity, 0), _planets);
-			var _jupi = new Item(Colors.DarkGray, new Point(_centerSolar.X, _centerSolar.Y + _jupiOrbitRadius), _motionJupi, 317.8, this.FEarthRadiusRel * 11.2);
+            var _jupi = new Item(Colors.DarkGray, new Point(_centerSolar.X, _centerSolar.Y + _jupiOrbitRadius), _motionJupi,
+                FEarthMass * 317.8, 1); // this.FEarthRadiusRel * 11.2);
 			_planets.Add(_jupi);
 
 			var _saturnEx = 0.0557;
 			var _saturnOrbitRadius = _earthOrbitRadius * 9.048;
 			var _saturnVelocity = Math.Sqrt(this.FSolarMass * (1 + _saturnEx) / _saturnOrbitRadius * (1 - _saturnEx));
 			var _motionSaturn = new GravityMotion(new Vector(_saturnVelocity, 0), _planets);
-			var _saturn = new Item(Colors.GreenYellow, new Point(_centerSolar.X, _centerSolar.Y - _saturnOrbitRadius), _motionSaturn, 95, this.FEarthRadiusRel * 9.41);
+            var _saturn = new Item(Colors.GreenYellow, new Point(_centerSolar.X, _centerSolar.Y - _saturnOrbitRadius), _motionSaturn,
+                FEarthMass * 95, 1); // this.FEarthRadiusRel * 9.41);
 			_planets.Add(_saturn);
 
 			var _uranEx = 0.0444;
 			var _uranOrbitRadius = _earthOrbitRadius * 18.3755;
 			var _uranVelocity = Math.Sqrt(this.FSolarMass * (1 + _uranEx) / _uranOrbitRadius * (1 - _uranEx));
 			var _motionUran = new GravityMotion(new Vector(_uranVelocity, 0), _planets);
-			var _uran = new Item(Colors.LightBlue, new Point(_centerSolar.X, _centerSolar.Y - _uranOrbitRadius), _motionUran, 14.6, this.FEarthRadiusRel * 3.98);
+            var _uran = new Item(Colors.LightBlue, new Point(_centerSolar.X, _centerSolar.Y - _uranOrbitRadius), _motionUran,
+                FEarthMass * 14.6, 1); // this.FEarthRadiusRel * 3.98);
 			_planets.Add(_uran);
 
 			var _neptunEx = 0.0112;
 			var _neptunOrbitRadius = _earthOrbitRadius * 29.766;
 			var _neptunVelocity = Math.Sqrt(this.FSolarMass * (1 + _neptunEx) / _neptunOrbitRadius * (1 - _neptunEx));
 			var _motionNeptun = new GravityMotion(new Vector(_neptunVelocity, 0), _planets);
-			var _neptun = new Item(Colors.Violet, new Point(_centerSolar.X, _centerSolar.Y - _neptunOrbitRadius), _motionNeptun, 17.15, this.FEarthRadiusRel * 3.81);
+            var _neptun = new Item(Colors.Violet, new Point(_centerSolar.X, _centerSolar.Y - _neptunOrbitRadius), _motionNeptun,
+                FEarthMass * 17.15, 1); // this.FEarthRadiusRel * 3.81);
 			_planets.Add(_neptun);
 
 			double _p = 0;
@@ -221,11 +230,11 @@ namespace AnimationTest
 
 			var _sy = (_ms * _centerSolar.Y - _mr) / this.FSolarMass;
 			var _motionSolar = new GravityMotion(new Vector(-_p / this.FSolarMass, 0), _planets);
-			var _sol = new Item(
-				Colors.Orange, new Point(_centerSolar.X, _sy), _motionSolar, this.FSolarMass, 109 * this.FEarthRadiusRel);
+            var _sol = new Item(Colors.Orange, new Point(_centerSolar.X, _sy), _motionSolar,
+                this.FSolarMass, 3); // 109 * this.FEarthRadiusRel);
 			_planets.Add(_sol);
 
-			this.FItemsLists.Add("Solar System", _planets);
+			this.FItemsLists.Add(ItemsNames.SolarSystem, _planets);
 
 			var _listCombined1 = new List<Item>();
 
@@ -392,6 +401,44 @@ namespace AnimationTest
 			get { return this.FFieldIsDrew; }
 			set { this.FFieldIsDrew = value; }
 		}
+
+        private Vector FVelocity;
+        public Vector Velocity
+        {
+            get { return this.FVelocity; }
+            set
+            {
+                this.FVelocity = value;
+
+                var _list4 = this.ItemsLists[ItemsNames.GravityToMoon];
+
+                var _motionSattelite4_1 = new GravityMotion(this.Velocity, _list4);
+                var _sattelite4_1 = new Item(Colors.Gray, new Point(600, 350), _motionSattelite4_1, 0, 3);
+                //_list4.Add(_sattelite4_1);
+                _list4[2] = _sattelite4_1;
+            }
+        }
+
+        private Vector FChallengerVelocity;
+        public Vector ChallengerVelocity
+        {
+            get { return this.FChallengerVelocity; }
+            set
+            {
+                this.FChallengerVelocity = value;
+
+                var _solarSystem = this.ItemsLists[ItemsNames.SolarSystem];
+                var _motionChallenger = new GravityMotion(
+                    new Vector(this.ChallengerVelocity.X / 100, this.ChallengerVelocity.Y / 100), _solarSystem);
+                var _earth = _solarSystem[0];
+                var _challenger = new Item(Colors.Gray, _earth.Position, _motionChallenger,
+                    0.00000001 * FEarthMass, 1);
+                if (_solarSystem.Count < 10)
+                    _solarSystem.Add(_challenger);
+                else
+                    _solarSystem[9] = _challenger;
+            }
+        }
 
 		public async void Go()
 		{

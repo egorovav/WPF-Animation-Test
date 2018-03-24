@@ -204,8 +204,10 @@ namespace AnimationTest
 			this.DrawTracks();
 		}
 
-		Point FDragStart;
-        Item FCapturedItem;
+		private Point FDragStart;
+        private Item FCapturedItem;
+        private DateTime FTimeStamp = DateTime.Now;
+        //private Vector FMouseVelocity;
 
 		private void iCanvas_MouseDown(object sender, MouseEventArgs e)
 		{
@@ -224,6 +226,11 @@ namespace AnimationTest
                         }
                     }
                 }
+            }
+            else if(e.RightButton == MouseButtonState.Pressed)
+            {
+                this.FTimeStamp = DateTime.Now;
+                this.FDragStart = e.GetPosition(this.iCanvas);
             }
         }
 
@@ -254,19 +261,49 @@ namespace AnimationTest
                         this.DrawTracks();
                     }
                 }
-                //else
-                //    this.FDragStart = new Point(0, 0);
             }
-            //else
-            //{
-            //    this.FCapturedItem = null;
-            //}
         }
 
         private void iCanvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            this.FCapturedItem = null;
-            this.FDragStart = new Point(0, 0);
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                this.FCapturedItem = null;
+                this.FDragStart = new Point(0, 0);
+            }
+            else if (e.ChangedButton == MouseButton.Right)
+            {
+                var _p = e.GetPosition(this.iCanvas);
+                var _dx = _p.X - this.FDragStart.X;
+                var _dy = _p.Y - this.FDragStart.Y;
+                var _dt = (DateTime.Now - this.FTimeStamp).TotalMilliseconds / 10;
+
+                //this.FMouseVelocity = new Vector(_dx / _dt, _dy / _dt);
+                if (this.MainViewModel.ItemsName == ItemsNames.GravityToMoon)
+                {
+                    this.MainViewModel.Velocity = new Vector(_dx / _dt, _dy / _dt);
+
+                    this.FDragStart = new Point();
+
+                    this.CanvasElement.Clear();
+                    foreach (var _item in this.MainViewModel.Items)
+                    {
+                        _item.Reset();
+                        this.CanvasElement.AddItem(_item);
+                    }
+
+                    this.CanvasElement.DrawItems(1, new Point(0, 0));
+                    this.ClearTracks();
+
+                    this.MainViewModel.RunCommand.Execute(this.MainViewModel);
+                }
+
+                if(this.MainViewModel.ItemsName == ItemsNames.SolarSystem)
+                {
+                    this.MainViewModel.ChallengerVelocity = new Vector(_dx / _dt, _dy / _dt);
+                }
+            }
+
         }
 
         private void iCanvas_MouseLeave(object sender, MouseEventArgs e)

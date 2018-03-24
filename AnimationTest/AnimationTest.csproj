@@ -59,6 +59,7 @@
     <Compile Include="Model\PeriodicMotion.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="ViewModel\DelegateCommand.cs" />
+    <Compile Include="ViewModel\ItemsNames.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
