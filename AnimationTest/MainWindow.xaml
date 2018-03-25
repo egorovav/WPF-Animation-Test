@@ -9,20 +9,21 @@
     <Window.Resources>
         <local:MainViewModel x:Key="MainViewModel" />
     </Window.Resources>
-    
+
     <Grid Name="gMain" DataContext="{StaticResource MainViewModel}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="20px" />
+            <RowDefinition Height="30px" />
             <RowDefinition Height="40px" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Menu x:Name="mMain" DataContext="{StaticResource MainViewModel}">
+        <Menu x:Name="mMain">
             <MenuItem x:Name="mMotion" Header="Motion"></MenuItem>
             <MenuItem x:Name="mGroup" Header="Group"></MenuItem>
             <MenuItem x:Name="mGravity" Header="Gravity"></MenuItem>
             <MenuItem x:Name="mRandom" Header="Random"></MenuItem>
             <CheckBox Content="Draw Tracks" IsChecked="{Binding DrawTracks}" />
             <!--CheckBox Content="Simplify Tracks" IsChecked="{Binding SimplifyTracks}" /-->
+            <TextBox x:Name="tbxVelocity" IsReadOnly="True" Text="{Binding Velocity}"></TextBox>
         </Menu>
         <StackPanel Orientation="Horizontal" Grid.Row="1">
             <Button x:Name="btnRun" Content="Run" Command="{Binding RunCommand}" 

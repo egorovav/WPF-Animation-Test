@@ -24,12 +24,13 @@ namespace AnimationTest
 	{
 		public MainWindow()
 		{
+            //this.DataContext = new MainViewModel();
 			InitializeComponent();
-			this.MainViewModel.PropertyChanged += MainViewModel_PropertyChanged;
+			this.ViewModel.PropertyChanged += MainViewModel_PropertyChanged;
 
 			//this.CanvasElement.Items = this.MainViewModel.Items;	
 
-			foreach(var _list in this.MainViewModel.ItemsLists)
+			foreach(var _list in this.ViewModel.ItemsLists)
 			{
 				var _menuItem = new MenuItem();
 				_menuItem.Header = _list.Key;
@@ -54,13 +55,19 @@ namespace AnimationTest
 			this.CanvasElement.RenderTransform = this.FTransform;
 		}
 
+        //protected MainViewModel ViewModel
+        //{
+        //    get { return (MainViewModel)this.DataContext; }
+        //    set { this.DataContext = value; }
+        //}
+
 		WriteableBitmap FTracksImage;
 		int FStright;
 		TransformGroup FTransform = new TransformGroup();
 
 		private void _menuItem_Click(object sender, RoutedEventArgs e)
 		{
-			this.MainViewModel.ItemsName = (string)((MenuItem)sender).Header;
+			this.ViewModel.ItemsName = (string)((MenuItem)sender).Header;
 		}
 
 		private void MainViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -72,15 +79,15 @@ namespace AnimationTest
 					lock (MainViewModel.CanvasLocker)
 					{
 						this.CanvasElement.DrawItems(1, new Point(0, 0));
-						this.MainViewModel.CanvasIsDrew = true;
+						this.ViewModel.CanvasIsDrew = true;
 					}
 				});
 
 				this.Dispatcher.Invoke(() =>
 				{
-					if (this.MainViewModel.DrawTracks)
+					if (this.ViewModel.DrawTracks)
 					{
-						foreach (var _item in this.MainViewModel.Items)
+						foreach (var _item in this.ViewModel.Items)
 						{
 							DrawTrackPoint(this.FTransform.Transform(_item.Position), _item.Color, 1, new Point(0, 0));
 						}
@@ -92,19 +99,19 @@ namespace AnimationTest
 			{
 				this.Dispatcher.Invoke(() =>
 				{
-					MessageBox.Show(this.MainViewModel.ErrorString);
+					MessageBox.Show(this.ViewModel.ErrorString);
 				});				
 			}
 
 			if(e.PropertyName == MainViewModel.ItemsNamePropertyName)
 			{
-				if (this.MainViewModel.Items == null)
+				if (this.ViewModel.Items == null)
 					return;
 
                 this.FTransform.Children.Clear();
 
                 this.CanvasElement.Clear();
-				foreach (var _item in this.MainViewModel.Items)
+				foreach (var _item in this.ViewModel.Items)
 				{
 					_item.Reset();
 					this.CanvasElement.AddItem(_item);
@@ -116,7 +123,7 @@ namespace AnimationTest
 
 			if(e.PropertyName == MainViewModel.DrawTracksPropertyName)
 			{
-				if (this.MainViewModel.DrawTracks)
+				if (this.ViewModel.DrawTracks)
 					this.DrawTracks();
 				else
 					this.ClearTracks();
@@ -132,8 +139,8 @@ namespace AnimationTest
 
 		private void DrawTracks()
 		{
-			var _items = this.MainViewModel.Items;
-			if (!this.MainViewModel.DrawTracks || _items == null)
+			var _items = this.ViewModel.Items;
+			if (!this.ViewModel.DrawTracks || _items == null)
 				return;
 
 			var _w = this.FTracksImage.PixelWidth;
@@ -186,12 +193,12 @@ namespace AnimationTest
 			this.FTracksImage.WritePixels(_rect, _pixels, this.FStright, 0);
 		}
 
-		protected MainViewModel MainViewModel
-		{
-			get { return (MainViewModel)gMain.DataContext; }
-		}
+        protected MainViewModel ViewModel
+        {
+            get { return (MainViewModel)gMain.DataContext; }
+        }
 
-		private void iCanvas_MouseWheel(object sender, MouseWheelEventArgs e)
+        private void iCanvas_MouseWheel(object sender, MouseWheelEventArgs e)
 		{
 			var _p = e.GetPosition(this.iCanvas);
 
@@ -215,9 +222,9 @@ namespace AnimationTest
             {
                 this.FDragStart = e.GetPosition(this.iCanvas);
 
-                if (this.MainViewModel.Items != null)
+                if (this.ViewModel.Items != null)
                 {
-                    foreach (var _item in this.MainViewModel.Items)
+                    foreach (var _item in this.ViewModel.Items)
                     {
                         var _delta = this.FTransform.Transform(_item.Position) - this.FDragStart;
                         if (_delta.Length < _item.Radius)
@@ -236,7 +243,7 @@ namespace AnimationTest
 
 		private void iCanvas_MouseMove(object sender, MouseEventArgs e)
 		{
-            if (this.MainViewModel.Items != null && e.LeftButton == MouseButtonState.Pressed)
+            if (this.ViewModel.Items != null && e.LeftButton == MouseButtonState.Pressed)
             {
                 var _dragEnd = e.GetPosition(this.iCanvas);
 
@@ -279,14 +286,14 @@ namespace AnimationTest
                 var _dt = (DateTime.Now - this.FTimeStamp).TotalMilliseconds / 10;
 
                 //this.FMouseVelocity = new Vector(_dx / _dt, _dy / _dt);
-                if (this.MainViewModel.ItemsName == ItemsNames.GravityToMoon)
+                if (this.ViewModel.ItemsName == ItemsNames.GravityToMoon)
                 {
-                    this.MainViewModel.Velocity = new Vector(_dx / _dt, _dy / _dt);
+                    this.ViewModel.Velocity = new Vector(_dx / _dt, _dy / _dt);
 
                     this.FDragStart = new Point();
 
                     this.CanvasElement.Clear();
-                    foreach (var _item in this.MainViewModel.Items)
+                    foreach (var _item in this.ViewModel.Items)
                     {
                         _item.Reset();
                         this.CanvasElement.AddItem(_item);
@@ -295,12 +302,12 @@ namespace AnimationTest
                     this.CanvasElement.DrawItems(1, new Point(0, 0));
                     this.ClearTracks();
 
-                    this.MainViewModel.RunCommand.Execute(this.MainViewModel);
+                    this.ViewModel.RunCommand.Execute(this.ViewModel);
                 }
 
-                if(this.MainViewModel.ItemsName == ItemsNames.SolarSystem)
+                if(this.ViewModel.ItemsName == ItemsNames.SolarSystem)
                 {
-                    this.MainViewModel.ChallengerVelocity = new Vector(_dx / _dt, _dy / _dt);
+                    this.ViewModel.ChallengerVelocity = new Vector(_dx / _dt, _dy / _dt);
                 }
             }
 
@@ -314,17 +321,20 @@ namespace AnimationTest
 
         private void btnAccelerate_Click(object sender, RoutedEventArgs e)
 		{
-			this.MainViewModel.Delta *= 1.1;
+			this.ViewModel.Delta *= 1.1;
 		}
 
 		private void btnDeaccelerate_Click(object sender, RoutedEventArgs e)
 		{
-			this.MainViewModel.Delta /= 1.1;
+			this.ViewModel.Delta /= 1.1;
 		}
 
 		private void btnClear_Click(object sender, RoutedEventArgs e)
 		{
-			foreach(var _item in this.MainViewModel.Items)
+            if (this.ViewModel.Items == null)
+                return;
+
+            foreach (var _item in this.ViewModel.Items)
 			{
 				_item.ClearTrack();
 				this.ClearTracks();

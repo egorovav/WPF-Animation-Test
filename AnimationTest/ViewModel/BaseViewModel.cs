@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AnimationTest
 {
-	public class BaseViewModel
+	public class BaseViewModel : INotifyPropertyChanged
 	{
 
 		public event PropertyChangedEventHandler PropertyChanged;

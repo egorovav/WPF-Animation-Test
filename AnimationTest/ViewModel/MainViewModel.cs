@@ -27,8 +27,6 @@ namespace AnimationTest
 
 		public static object CanvasLocker = new object();
 
-		
-
 		public MainViewModel()
 		{
 			var _startPoint = new Point(20, 20);
@@ -327,11 +325,14 @@ namespace AnimationTest
 			}
 		}
 
-		public static string ItemsNamePropertyName = "Items";
+		public static string ItemsNamePropertyName = "ItemsName";
 		private string FItemsName;
 		public string ItemsName
 		{
-			get { return this.FItemsName; }
+			get
+            {
+                return this.FItemsName;
+            }
 			set
 			{
 				this.FItemsName = value;
@@ -375,7 +376,10 @@ namespace AnimationTest
 		private bool FDrawTracks;
 		public bool DrawTracks
 		{
-			get { return this.FDrawTracks; }
+			get
+            {
+                return this.FDrawTracks;
+            }
 			set
 			{
 				this.FDrawTracks = value;
@@ -402,22 +406,28 @@ namespace AnimationTest
 			set { this.FFieldIsDrew = value; }
 		}
 
+        private static string VelocityPropertyName = "Velocity";
         private Vector FVelocity;
         public Vector Velocity
         {
-            get { return this.FVelocity; }
+            get
+            {
+                return this.FVelocity;
+            }
             set
             {
                 this.FVelocity = value;
 
                 var _list4 = this.ItemsLists[ItemsNames.GravityToMoon];
 
-                var _motionSattelite4_1 = new GravityMotion(this.Velocity, _list4);
+                var _motionSattelite4_1 = new GravityMotion(value, _list4);
                 var _sattelite4_1 = new Item(Colors.Gray, new Point(600, 350), _motionSattelite4_1, 0, 3);
                 //_list4.Add(_sattelite4_1);
                 _list4[2] = _sattelite4_1;
+                NotifyPropertyChanged(VelocityPropertyName);
             }
         }
+
 
         private Vector FChallengerVelocity;
         public Vector ChallengerVelocity
