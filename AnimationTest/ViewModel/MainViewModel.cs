@@ -105,21 +105,21 @@ namespace AnimationTest
 			var _sattelite4 = new Item(Colors.Gray, new Point(600, 350), _motionSattelite4, 0, 3);
             _list4.Add(_sattelite4);
 
-			//for (int i = 98; i < 99; i++)
-			//{
-			//	var _motionS = new GravityMotion(new Vector(12.606851 + i * 0.00000001, -7.1), _list4);
-			//	var _s = new Item(Colors.Gray, new Point(600, 350), _motionS, 0, 3);
-			//	_list4.Add(_s);
-			//}
+            //for (int i = 98; i < 99; i++)
+            //{
+            //	var _motionS = new GravityMotion(new Vector(12.606851 + i * 0.00000001, -7.1), _list4);
+            //	var _s = new Item(Colors.Gray, new Point(600, 350), _motionS, 0, 3);
+            //	_list4.Add(_s);
+            //}
 
-			//for (int i = 0; i < 100; i++)
-			//{
-			//	var _motionS = new GravityMotion(new Vector(14.565914 + i * 0.00000001, 0), _list4);
-			//	var _s = new Item(Colors.Gray, new Point(600, 350), _motionS, 0, 3);
-			//	_list4.Add(_s);
-			//}
+            //for (int i = 0; i < 100; i++)
+            //{
+            //    var _motionS = new GravityMotion(new Vector(7.29 + i * 0.000001, 12.3137), _list4);
+            //    var _s = new Item(Colors.Gray, new Point(600, 350), _motionS, 0, 3);
+            //    _list4.Add(_s);
+            //}
 
-			var _motionSattelite5 = new GravityMotion(new Vector(Math.Sqrt(7f / 2f), 0), _list5);
+            var _motionSattelite5 = new GravityMotion(new Vector(Math.Sqrt(7f / 2f), 0), _list5);
 			var _sattelite5 = new Item(Colors.Gray, new Point(600, 20), _motionSattelite5, 0, 3);
 			_list5.Add(_sattelite5);
 
@@ -141,14 +141,31 @@ namespace AnimationTest
             var _item6_4 = new Item(Colors.Violet, new Point(150, 450), _motion6_4, 1700);
             _list6.Add(_item6_4);
 
+            var _centerSolar = new Point(600, 400);
+
+            var _list7 = new List<Item>();
+            var _motionSolar1 = new GravityMotion(new Vector(0.17, 0), _list7);
+            var _sol1 = new Item(Colors.Orange, _centerSolar, _motionSolar1, this.FSolarMass * 200);
+            _list7.Add(_sol1);
+
+            var _motionSolar2 = new GravityMotion(new Vector(-0.42, 0), _list7);
+            var _sol2 = new Item(Colors.OrangeRed, new Point(_centerSolar.X, _centerSolar.Y - 30),
+                _motionSolar2, this.FSolarMass * 100, 5);
+            _list7.Add(_sol2);
+
+            var _motion7_1 = new GravityMotion(new Vector(0.4, 0), _list7);
+            var _plan1 = new Item(Colors.Blue, new Point(_centerSolar.X, _centerSolar.Y - 100),
+                _motion7_1, this.FSolarMass * 20, 2);
+            _list7.Add(_plan1);
+
             this.FItemsLists.Add(ItemsNames.GroupAccelerated, _list1);
 			this.FItemsLists.Add(ItemsNames.GravityThreeObjects, _list2);
 			this.FItemsLists.Add(ItemsNames.GravityEarthSattelite, _list3);
 			this.FItemsLists.Add(ItemsNames.GravityToMoon, _list4);
 			this.FItemsLists.Add(ItemsNames.GravityMoon, _list5);
             this.FItemsLists.Add(ItemsNames.GravityFourObjects, _list6);
+            this.FItemsLists.Add(ItemsNames.Pulsar, _list7);
 
-			var _centerSolar = new Point(600, 400);
 			var _earthOrbitRadius = this.FEarthRadiusRel * 2 * this.FEarthOrbit / this.FEarthDiam;
 			var _planets = new List<Item>();
 
@@ -269,15 +286,36 @@ namespace AnimationTest
 			var _periodicMotion5 = new PeriodicMotion(500, 200, new Vector(1, 0));
 			_listCombined3.Add(new Item(_blue, new Point(200, 20), _periodicMotion5));
 
-			var _periodicMotion3 = new PeriodicMotion(200, 200, new Vector(0, -1));
+			var _periodicMotion3 = new PeriodicMotion(400, 200, new Vector(0, -1));
 			_listCombined3.Add(new Item(_red, new Point(40, 200), _periodicMotion3));
 
-			var _leminiscateMotion = new MotionGroup();
-			_leminiscateMotion.AddMotion(_periodicMotion5);
-			_leminiscateMotion.AddMotion(_periodicMotion3);
-			_listCombined3.Add(new Item(_violet, new Point(200, 200), _leminiscateMotion));
+			var _lissajousMotion = new MotionGroup();
+			_lissajousMotion.AddMotion(_periodicMotion5);
+			_lissajousMotion.AddMotion(_periodicMotion3);
+			_listCombined3.Add(new Item(_violet, new Point(200, 200), _lissajousMotion));
 
-			this.FItemsLists.Add("Group:Leminiscate", _listCombined3);
+			this.FItemsLists.Add("Group:Lissajous", _listCombined3);
+
+			var _straightMotion1 = new StraightMotion(new Vector(1, 0));
+			var _faddingMotion = new PeriodicMotion(200, 200, new Vector(0, -1), 0, 0.9999);
+			var _elasticOscillation = new MotionGroup();
+			_elasticOscillation.AddMotion(_faddingMotion);
+			_elasticOscillation.AddMotion(_straightMotion1);
+			var _listCombined5 = new List<Item>();
+			_listCombined5.Add(new Item(Colors.Green, new Point(20, 250), _elasticOscillation));
+            _listCombined5.Add(new Item(Colors.Aquamarine, new Point(20, 250), _faddingMotion));
+
+			this.FItemsLists.Add("Group:Elastic", _listCombined5);
+
+			var _listCombined6 = new List<Item>();
+			var _periodicMotion3f = new PeriodicMotion(1000, 200, new Vector(1, 0), 0, 0.999995);
+			var _periodicMotion5f = new PeriodicMotion(900, 200, new Vector(0, -1), 0, 0.999995);
+			var _faddingLissajous = new MotionGroup();
+			_faddingLissajous.AddMotion(_periodicMotion3f);
+			_faddingLissajous.AddMotion(_periodicMotion5f);
+			_listCombined6.Add(new Item(Colors.GreenYellow, new Point(300, 300), _faddingLissajous));
+
+			this.FItemsLists.Add("Group:FaddingLissojus" , _listCombined6);
 
 			var _listCombined4 = new List<Item>();
 			
@@ -442,7 +480,7 @@ namespace AnimationTest
                     new Vector(this.ChallengerVelocity.X / 100, this.ChallengerVelocity.Y / 100), _solarSystem);
                 var _earth = _solarSystem[0];
                 var _challenger = new Item(Colors.Gray, _earth.Position, _motionChallenger,
-                    0.00000001 * FEarthMass, 1);
+                    0.00000001 * FEarthMass);
                 if (_solarSystem.Count < 10)
                     _solarSystem.Add(_challenger);
                 else

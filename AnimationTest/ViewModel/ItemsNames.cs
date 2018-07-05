@@ -15,5 +15,6 @@ namespace AnimationTest
         public const string GravityMoon = "Gravity:Moon sattelite";
         public const string GravityFourObjects = "Gravity:Four objects";
         public const string SolarSystem = "Solar System";
+        public const string Pulsar = "Pulsar";
     }
 }
