@@ -21,6 +21,7 @@
             <MenuItem x:Name="mGroup" Header="Group"></MenuItem>
             <MenuItem x:Name="mGravity" Header="Gravity"></MenuItem>
             <MenuItem x:Name="mRandom" Header="Random"></MenuItem>
+            <MenuItem x:Name="mCollision" Header="Collision"></MenuItem>
             <CheckBox Content="Draw Tracks" IsChecked="{Binding DrawTracks}" />
             <!--CheckBox Content="Simplify Tracks" IsChecked="{Binding SimplifyTracks}" /-->
             <TextBox x:Name="tbxVelocity" IsReadOnly="True" Text="{Binding Velocity}"></TextBox>

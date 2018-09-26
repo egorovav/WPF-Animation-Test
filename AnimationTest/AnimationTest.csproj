@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\CollisionMotion.cs" />
     <Compile Include="Model\GravityMotion.cs" />
     <Compile Include="Model\PeriodicMotion.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />

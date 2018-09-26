@@ -341,12 +341,48 @@ namespace AnimationTest
 			var _random = new Random(DateTime.Now.Millisecond);
 			for(int i = 0; i < 100; i++)
 			{
-				var _randomMotion = new StraightMotion(1, 10, _random);
+                var _randomMotion = new StraightMotion(1, 10, _random);
 				var _item = new Item(Colors.Gray, new Point(400, 200), _randomMotion, 0, 3);
 				_listGaz1.Add(_item);
 			}
 
 			this.FItemsLists.Add("Random:Gaz", _listGaz1);
+
+            var _listGaz2 = new List<Item>();
+
+            _random = new Random(DateTime.Now.Millisecond);
+            for (int i = 0; i < 100; i++)
+            {
+                var _randomMotion = new CollisionMotion(StraightMotion.GetRandomVelocity(1, 10, _random), _listGaz2);
+                var _start = new Point(_random.Next(10, 1200), _random.Next(10, 800));
+                var _item = new Item(Colors.Gray, _start, _randomMotion, 0, 5);
+                _listGaz2.Add(_item);
+            }
+
+            this.FItemsLists.Add("Random:GazWithCollisions", _listGaz2);
+
+            var _listGaz3 = new List<Item>();
+
+            _random = new Random(DateTime.Now.Millisecond);
+            for (int i = 0; i < 200; i++)
+            {
+                var _velocity = StraightMotion.GetRandomVelocity(1, 10, _random);
+                var _randomMotion = new CollisionMotion(_velocity, new Vector(0, 0.1), _listGaz3);
+                var _start = new Point(i % 20 * 40, (i / 20) * 40);
+                var _item = new Item(Colors.Gray, _start, _randomMotion, 0, 5);
+                _listGaz3.Add(_item);
+            }
+
+            this.FItemsLists.Add("Random:GazWithGravity", _listGaz3);
+
+            var _collItems = new List<Item>();
+            var _collMotion1 = new CollisionMotion(new Vector(5, 0), _collItems);
+            var _collItem1 = new Item(Colors.Gray, new Point(20, 315), _collMotion1, 0);
+            _collItems.Add(_collItem1);
+            var _collMotion2 = new CollisionMotion(new Vector(-5, 0), _collItems);
+            var _collItem2 = new Item(Colors.DarkGray, new Point(600, 300), _collMotion2, 0);
+            _collItems.Add(_collItem2);
+            this.FItemsLists.Add("Collision:SimpleTest", _collItems);
 
 			//this.FItems = this.FItemsLists[4];
 		}

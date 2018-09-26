@@ -97,7 +97,7 @@ namespace AnimationTest
 	public class StraightMotion : DetermineMotion
 	{
 		protected Vector FVelocity;
-		private Vector FStartVelocity;
+		protected Vector FStartVelocity;
 
 		public StraightMotion(Vector aVelocity)
 		{
@@ -105,26 +105,30 @@ namespace AnimationTest
 			this.FStartVelocity = aVelocity;
 		}
 
+        public static Vector GetRandomVelocity(double aMinVelocity, double aMaxVelocity, Random aRandom)
+        {
+            var _velocityRate = aRandom.NextDouble();
+            var _velocityValue = aMinVelocity * (1 - _velocityRate) + _velocityRate * aMaxVelocity;
+
+            var _velocityDirection = aRandom.NextDouble() * 2 - 1;
+
+            var _vx = Math.Sqrt(_velocityValue * _velocityValue / (1 + _velocityDirection * _velocityDirection));
+            var _reverse = aRandom.NextDouble() - 0.5;
+            if (_reverse < 0)
+                _vx = -_vx;
+
+            var _vy = _velocityDirection * _vx;
+
+            var _swap = aRandom.NextDouble() - 0.5;
+            if (_swap < 0)
+                return new Vector(_vx, _vy);
+            else
+                return new Vector(_vy, _vx);
+        }
+
 		public StraightMotion(double aMinVelocity, double aMaxVelocity, Random aRandom)
 		{
-			var _velocityRate = aRandom.NextDouble();
-			var _velocityValue = aMinVelocity * (1 - _velocityRate) + _velocityRate * aMaxVelocity;
-
-			var _velocityDirection = aRandom.NextDouble() * 2 - 1;
-
-			var _vx = Math.Sqrt(_velocityValue * _velocityValue / (1 + _velocityDirection * _velocityDirection));
-			var _reverse = aRandom.NextDouble() - 0.5;
-			if (_reverse < 0)
-				_vx = -_vx;
-
-			var _vy = _velocityDirection * _vx;
-
-			var _swap = aRandom.NextDouble() - 0.5;
-			if (_swap < 0)
-				this.FVelocity = new Vector(_vx, _vy);
-			else
-				this.FVelocity = new Vector(_vy, _vx);
-
+            this.FVelocity = StraightMotion.GetRandomVelocity(aMinVelocity, aMaxVelocity, aRandom);
 			this.FStartVelocity = this.FVelocity;
 		}
 
@@ -153,12 +157,20 @@ namespace AnimationTest
 	public class AcceleratedMotion : DetermineMotion
 	{
 		protected Vector FAcceleration;
-		private Vector FVelocity = new Vector(0, 0);
+        protected Vector FStartVelocity;
+		protected Vector FVelocity = new Vector(0, 0);
 
 		public AcceleratedMotion(Vector aAcceleration)
 		{
 			this.FAcceleration = aAcceleration;
 		}
+
+        public AcceleratedMotion(Vector aAcceleration, Vector aVelocity)
+            : this(aAcceleration)
+        {
+            this.FVelocity = aVelocity;
+            this.FStartVelocity = aVelocity;
+        }
 
 		public override Vector GetVelocity()
 		{
@@ -182,7 +194,8 @@ namespace AnimationTest
 		public override void Reset()
 		{
 			base.Reset();
-			this.FVelocity = new Vector(0, 0);
+            //this.FVelocity = new Vector(0, 0);
+            this.FVelocity = this.FStartVelocity;
 		}
 	}
 

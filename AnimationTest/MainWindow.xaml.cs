@@ -36,14 +36,16 @@ namespace AnimationTest
 				_menuItem.Header = _list.Key;
 				_menuItem.Click += _menuItem_Click;
 
-				if (_list.Key.StartsWith("Group:"))
-					this.mGroup.Items.Add(_menuItem);
-				else if (_list.Key.StartsWith("Gravity:"))
-					this.mGravity.Items.Add(_menuItem);
-				else if (_list.Key.StartsWith("Random:"))
-					this.mRandom.Items.Add(_menuItem);
-				else
-					this.mMotion.Items.Add(_menuItem);
+                if (_list.Key.StartsWith("Group:"))
+                    this.mGroup.Items.Add(_menuItem);
+                else if (_list.Key.StartsWith("Gravity:"))
+                    this.mGravity.Items.Add(_menuItem);
+                else if (_list.Key.StartsWith("Random:"))
+                    this.mRandom.Items.Add(_menuItem);
+                else if (_list.Key.StartsWith("Collision:"))
+                    this.mCollision.Items.Add(_menuItem);
+                else
+                    this.mMotion.Items.Add(_menuItem);
 			}
 
 			this.FTracksImage = new WriteableBitmap(
