@@ -25,6 +25,9 @@
             <CheckBox Content="Draw Tracks" IsChecked="{Binding DrawTracks}" />
             <!--CheckBox Content="Simplify Tracks" IsChecked="{Binding SimplifyTracks}" /-->
             <TextBox x:Name="tbxVelocity" IsReadOnly="True" Text="{Binding Velocity}"></TextBox>
+            <TextBox x:Name="tbxAvgVelocity" IsReadOnly="True" Text="{Binding AvgVelocity}"></TextBox>
+            <TextBox x:Name="tbxMomentum" IsReadOnly="True" Text="{Binding Momentum}"></TextBox>
+            <TextBox x:Name="tbxEnergy" IsReadOnly="True" Text="{Binding Energy}"></TextBox>
         </Menu>
         <StackPanel Orientation="Horizontal" Grid.Row="1">
             <Button x:Name="btnRun" Content="Run" Command="{Binding RunCommand}" 

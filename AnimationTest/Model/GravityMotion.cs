@@ -25,7 +25,7 @@ namespace AnimationTest
 			get { return this.FTime; }
 		}
 
-		public override Vector GetShift(Point aPoint, double aTime)
+		public override Vector GetShift(Item aItem, double aTime)
 		{
 			var _a = new Vector(0, 0);
 			
@@ -38,7 +38,7 @@ namespace AnimationTest
 				var _motion = (GravityMotion)_item.Motion;
 				if (_motion.Time > this.FTime)
 					_position = _item.PrevPosition;
-				var _r = _position - aPoint;
+				var _r = _position - aItem.Position;
 				var _l = _r.Length;
 				if (_l == 0)
 					continue;
@@ -64,5 +64,10 @@ namespace AnimationTest
 		{
 			get { return this.FStartVelocity; }
 		}
+
+        public Vector Velocity
+        {
+            get { return this.FVelocity; }
+        }
 	}
 }

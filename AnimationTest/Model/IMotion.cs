@@ -1,5 +1,5 @@
-﻿
-using System;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Windows;
 
@@ -7,9 +7,9 @@ namespace AnimationTest
 {
 	public interface IMotion
 	{
-		Point GetPosition(Point aPoint);
+		Point GetPosition(Item aPoint);
 
-		Point GetPosition(Point aPoint, double aTime);
+		Point GetPosition(Item aPoint, double aTime);
 
 		void Reset();
 	}
@@ -18,23 +18,23 @@ namespace AnimationTest
 	{
 		protected double FTime = 0;
 
-		public Point GetPosition(Point aPoint)
+		public Point GetPosition(Item aItem)
 		{
-			return GetPosition(aPoint, 1);
+			return GetPosition(aItem, 1);
 		}
 
-		public virtual Point GetPosition(Point aPoint, double aTime)
+		public virtual Point GetPosition(Item aItem, double aTime)
 		{
-			var _s = this.GetShift(aPoint, aTime);
-			return aPoint + _s;
+			var _s = this.GetShift(aItem, aTime);
+			return aItem.Position + _s;
 		}
 
-		protected Vector GetShift(Point aPoint)
+		protected Vector GetShift(Item aItem)
 		{
-			return GetShift(aPoint, 1);
+			return GetShift(aItem, 1);
 		}
 
-		public abstract Vector GetShift(Point aPoint, double aTime);
+		public abstract Vector GetShift(Item aItem, double aTime);
 
 		public abstract void Reset();
 	}
@@ -52,43 +52,50 @@ namespace AnimationTest
 		protected abstract void ReverseX();
 		protected abstract void ReverseY();
 
-		public override Vector GetShift(Point aPoint, double aTime)
+		public override Vector GetShift(Item aItem, double aTime)
 		{
 			this.FTime += aTime;
 			var _v = GetVelocity();
 			var _s = _v * aTime;
 
 			if (IsWallUsed)
-			{
-				if (aPoint.X + _s.X < this.FLeft)
-				{
-					_s = new Vector(this.FLeft - aPoint.X, _s.Y);
-					this.ReverseX();
-				}
+            {
+                _s = WallProcessing(aItem.Position, _s);
+            }
 
-				if (aPoint.X + _s.X > this.FRight)
-				{
-					_s = new Vector(this.FRight - aPoint.X, _s.Y);
-					this.ReverseX();
-				}
-
-				if (aPoint.Y + _s.Y > this.FBottom)
-				{
-					_s = new Vector(_s.X, this.FBottom - aPoint.Y);
-					this.ReverseY();
-				}
-
-				if (aPoint.Y + _s.Y < this.FTop)
-				{
-					_s = new Vector(_s.X, this.FTop - aPoint.Y);
-					this.ReverseY();
-				}
-			}
-
-			return _s;
+            return _s;
 		}
 
-		public override void Reset()
+        protected Vector WallProcessing(Point aPoint, Vector _s)
+        {
+            if (aPoint.X + _s.X < this.FLeft)
+            {
+                _s = new Vector(this.FLeft - aPoint.X, _s.Y);
+                this.ReverseX();
+            }
+
+            if (aPoint.X + _s.X > this.FRight)
+            {
+                _s = new Vector(this.FRight - aPoint.X, _s.Y);
+                this.ReverseX();
+            }
+
+            if (aPoint.Y + _s.Y > this.FBottom)
+            {
+                _s = new Vector(_s.X, this.FBottom - aPoint.Y);
+                this.ReverseY();
+            }
+
+            if (aPoint.Y + _s.Y < this.FTop)
+            {
+                _s = new Vector(_s.X, this.FTop - aPoint.Y);
+                this.ReverseY();
+            }
+
+            return _s;
+        }
+
+        public override void Reset()
 		{
 			this.FTime = 0;
 		}
@@ -179,14 +186,16 @@ namespace AnimationTest
 
 		protected override void ReverseX()
 		{
-			var _v = GetVelocity();
+            var _v = GetVelocity();
+            //var _v = this.FVelocity;
 			this.FVelocity = new Vector(-_v.X, _v.Y);
 			this.FTime = 0;
 		}
 
 		protected override void ReverseY()
 		{
-			var _v = GetVelocity();
+            var _v = GetVelocity();
+            //var _v = this.FVelocity;
 			this.FVelocity = new Vector(_v.X, -_v.Y);
 			this.FTime = 0;
 		}
@@ -209,12 +218,12 @@ namespace AnimationTest
 			this.FMotions.Add(aMotion);
 		}
 
-		public override Vector GetShift(Point aPoint, double aTime)
+		public override Vector GetShift(Item aItem, double aTime)
 		{
 			var _ts = new Vector(0, 0);
 			foreach (var _motion in this.FMotions)
 			{				
-				_ts += _motion.GetShift(aPoint, aTime);
+				_ts += _motion.GetShift(aItem, aTime);
 			}
 			return _ts;
 		}
@@ -224,5 +233,15 @@ namespace AnimationTest
 			foreach (var _motion in this.FMotions)
 				_motion.Reset();
 		}
+
+        public double AvgVelocity
+        {
+            get
+            {
+                    return this.FMotions
+                        .Where(x => x is DetermineMotion)
+                        .Average(x => ((DetermineMotion)x).GetVelocity().Length);
+            }
+        }
 	}
 }

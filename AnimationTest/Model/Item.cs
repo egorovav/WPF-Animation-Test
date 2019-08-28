@@ -84,7 +84,7 @@ namespace AnimationTest
 			}
 
 			this.FPrevPosition = this.FPosition;
-			this.FPosition = this.FMotion.GetPosition(this.FPosition, aTime);
+			this.FPosition = this.FMotion.GetPosition(this, aTime);
 
 			return this.Position;
 		}
