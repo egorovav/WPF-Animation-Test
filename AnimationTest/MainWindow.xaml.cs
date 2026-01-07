@@ -91,7 +91,7 @@ namespace AnimationTest
 					{
 						foreach (var _item in this.ViewModel.Items)
 						{
-							DrawTrackPoint(this.FTransform.Transform(_item.Position), _item.Color, 1, new Point(0, 0));
+							DrawTrackPoint(this.FTransform.Transform(_item.DrawPoint), _item.Color, 1, new Point(0, 0));
 						}
 					}
 				});

@@ -36,6 +36,7 @@ namespace AnimationTest
             var _red = Color.FromRgb(255, 0, 0);
             var _blue = Color.FromRgb(0, 0, 255);
             var _violet = Color.FromRgb(255, 0, 255);
+            var _brown = Color.FromRgb(255, 128, 128);
 
             var _list1 = new List<Item>();
 
@@ -339,6 +340,54 @@ namespace AnimationTest
             _listCombined4.Add(new Item(_violet, new Point(100, 20), _cicloidMotion));
             this.FItemsLists.Add("Group:Cicloid", _listCombined4);
 
+            var _listCombined41 = new List<Item>();
+            var _cicloidMotion1 = new MotionGroup();
+            var _periodicMotion8 = new PeriodicMotion(1000, 100, new Vector(1, 0));
+            var _periodicMotion9 = new PeriodicMotion(1000, 100, new Vector(0, -1), Math.PI / 2);
+            var _periodicMotion61 = new PeriodicMotion(100, 20, new Vector(1, 0));
+            var _periodicMotion71 = new PeriodicMotion(100, 20, new Vector(0, -1), Math.PI / 2);
+            _cicloidMotion1.AddMotion(_periodicMotion61);
+            _cicloidMotion1.AddMotion(_periodicMotion71);
+            _cicloidMotion1.AddMotion(_periodicMotion8);
+            _cicloidMotion1.AddMotion(_periodicMotion9);
+
+            _listCombined41.Add(new Item(_violet, new Point(200, 120), _cicloidMotion1));
+            this.FItemsLists.Add("Group:CiclicCicloid", _listCombined41);
+
+            var _earthPeriod = 500;
+            var _listCombined7 = new List<Item>();
+            var _sunMotion = new StraightMotion(new Vector(0, 0));
+            var _mercuryMotion = new MotionGroup();
+            var _mercuryPeriodic1 = new PeriodicMotion(_earthPeriod * 0.241, _mercOrbitRadius, new Vector(1, 0));
+            var _mercuryPeriodic2 = new PeriodicMotion(_earthPeriod * 0.241, _mercOrbitRadius, new Vector(0, -1), Math.PI / 2);
+            _mercuryMotion.AddMotion(_mercuryPeriodic1);
+            _mercuryMotion.AddMotion(_mercuryPeriodic2);
+
+            var _venusMotion = new MotionGroup();
+            var _venusPeriodic1 = new PeriodicMotion(_earthPeriod * 0.615, _venusOrbitRadius, new Vector(1, 0));
+            var _venusPeriodic2 = new PeriodicMotion(_earthPeriod * 0.615, _venusOrbitRadius, new Vector(0, -1), Math.PI / 2);
+            _venusMotion.AddMotion(_venusPeriodic1);
+            _venusMotion.AddMotion(_venusPeriodic2);
+
+            var _earthMotion = new MotionGroup();
+            var _earthPeriodic1 = new PeriodicMotion(_earthPeriod, _earthOrbitRadius, new Vector(1, 0));
+            var _earthPeriodic2 = new PeriodicMotion(_earthPeriod, _earthOrbitRadius, new Vector(0, -1), Math.PI / 2);
+            _earthMotion.AddMotion(_earthPeriodic1);
+            _earthMotion.AddMotion(_earthPeriodic2);
+
+            var _marsMotion = new MotionGroup();
+            var _marsPeriodic1 = new PeriodicMotion(_earthPeriod * 1.88, _marsOrbitRadius, new Vector(1, 0));
+            var _marsPeriodic2 = new PeriodicMotion(_earthPeriod * 1.88, _marsOrbitRadius, new Vector(0, -1), Math.PI / 2);
+            _marsMotion.AddMotion(_marsPeriodic1);
+            _marsMotion.AddMotion(_marsPeriodic2);
+
+            _listCombined7.Add(new Item(Colors.Orange, _centerSolar, _sunMotion));
+            _listCombined7.Add(new Item(Colors.Brown, new Point(_centerSolar.X, _centerSolar.Y - _mercOrbitRadius), _mercuryMotion, 0, 3));
+            _listCombined7.Add(new Item(Colors.BlueViolet, new Point(_centerSolar.X, _centerSolar.Y - _venusOrbitRadius), _venusMotion, 0, 5));
+            _listCombined7.Add(new Item(Colors.DarkBlue, new Point(_centerSolar.X, _centerSolar.Y - _earthOrbitRadius), _earthMotion, 0, 5, true));
+            _listCombined7.Add(new Item(Colors.Red, new Point(_centerSolar.X, _centerSolar.Y - _marsOrbitRadius), _marsMotion, 0, 4));
+            this.FItemsLists.Add("Group:Ptolomey", _listCombined7);
+
             var _listGaz1 = new List<Item>();
 
             var _random = new Random(DateTime.Now.Millisecond);
@@ -367,7 +416,7 @@ namespace AnimationTest
             var _listGaz3 = new List<Item>();
 
             _random = new Random(DateTime.Now.Millisecond);
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 200; i++)
             {
                 var _velocity = StraightMotion.GetRandomVelocity(1, 10, _random);
                 var _randomMotion = new CollisionMotion(_velocity, new Vector(0, 0.1), _listGaz3);

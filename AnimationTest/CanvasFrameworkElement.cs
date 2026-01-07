@@ -73,12 +73,17 @@ namespace AnimationTest
 			this.FTrackPens[aColor] = new Pen(_trackBrush, 1);
 		}
 
-		public void DrawItem(Item aItem, DrawingContext aContext, double aZoom, Point aCenter)
+		public void DrawItem(Item aItem, DrawingContext aContext, double aZoom, Point aCenter, Point aDrawPoint)
 		{
 			var _brush = this.FItemBrushes[aItem.Color];
 			var _r = aItem.Radius * aZoom;
-			var _p = (aItem.Position - aCenter) * aZoom + aCenter;
+			var _p = (aDrawPoint - aCenter) * aZoom + aCenter;
 			aContext.DrawEllipse(_brush, null, _p, _r, _r);
+		}
+
+		public void DrawItem(Item aItem, DrawingContext aContext, double aZoom, Point aCenter)
+		{
+			DrawItem(aItem, aContext, aZoom, aCenter, aItem.DrawPoint);
 		}
 
 
@@ -87,6 +92,7 @@ namespace AnimationTest
 		public void DrawItems(double aZoom, Point aCenter)
 		{
 			this.FDrawingCount++;
+			Item _mainItem = this.FItems.Find(x => x.IsMainItem);
 
 			using (var _context = this.FItemsVisual.RenderOpen())
 			{
@@ -94,6 +100,22 @@ namespace AnimationTest
 				for (int i = 0; i < this.FItems.Count; i++)
 				{
 					var _item = this.FItems[i];
+					if (_mainItem == null)
+					{
+						_item.DrawPoint = _item.Position;
+					}
+					else
+					{
+						aCenter = _mainItem.StartPosition;
+						if(_item.IsMainItem)
+						{
+							_item.DrawPoint = _item.StartPosition;
+						}
+						else
+						{
+							_item.DrawPoint = _item.Position - (_mainItem.Position - _mainItem.StartPosition);
+						}
+					}
 
 					DrawItem(_item, _context, aZoom, aCenter);
 				}

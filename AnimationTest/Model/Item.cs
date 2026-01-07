@@ -16,6 +16,8 @@ namespace AnimationTest
 		private double FMass;
 		private Point FStartPosition;
 		//private Point FLastTrackPoint = new Point(-1, -1);
+		private bool FIsMainItem = false;
+		private Point FDrawPoint;
 
 		public Item(Color aColor, Point aPosition, IMotion aMotion)
 		{
@@ -23,6 +25,7 @@ namespace AnimationTest
 			this.FPosition = aPosition;
 			this.FMotion = aMotion;
 			this.FStartPosition = aPosition;
+			this.FDrawPoint = aPosition;
 		}
 
 		public Item(Color aColor, Point aPoint, IMotion aMotion, double aMass, double aRadius = 10)
@@ -30,6 +33,12 @@ namespace AnimationTest
 		{
 			this.FMass = aMass;
 			this.FRadius = aRadius;
+		}
+
+		public Item(Color aColor, Point aPoint, IMotion aMotion, double aMass, double aRadius, bool aIsMainItem)
+			: this(aColor, aPoint, aMotion, aMass, aRadius)
+		{
+			this.FIsMainItem = aIsMainItem;
 		}
 
 		public Point Position
@@ -43,6 +52,27 @@ namespace AnimationTest
             {
                 this.FPosition = value;
             }
+		}
+
+		public Point StartPosition
+		{
+			get
+			{
+				return this.FStartPosition;
+			}
+		}
+
+		public Point DrawPoint
+		{
+			get
+			{
+				return this.FDrawPoint;
+			}
+
+			set
+			{
+				this.FDrawPoint = value;
+			}
 		}
 
 		public Color Color
@@ -75,6 +105,11 @@ namespace AnimationTest
 			get { return this.FMotion; }
 		}
 
+		public bool IsMainItem
+		{
+			get { return this.FIsMainItem; }
+		}
+
 		public Point UpdatePosition(double aTime)
 		{
 			//if (Math.Truncate(this.Position.X) != Math.Truncate(this.PrevPosition.X) ||
@@ -86,13 +121,13 @@ namespace AnimationTest
 			this.FPrevPosition = this.FPosition;
 			this.FPosition = this.FMotion.GetPosition(this, aTime);
 
-			return this.Position;
+			return this.FPosition;
 		}
 
 		public Point UpdatePosition()
 		{
 			this.FPosition = this.UpdatePosition(1);
-			return this.Position;
+			return this.FPosition;
 		}
 
 		public void ClearTrack()
